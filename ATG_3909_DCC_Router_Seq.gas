@@ -1,0 +1,58 @@
+Program.Sub.ScreenSU.Start
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+'Hook 26000
+
+'F.Intrinsic.Debug.InvokeDebugger
+'F.Intrinsic.Debug.Stop
+
+
+V.Local.bExists.Declare(Boolean)
+V.Local.sFile.Declare(String)
+V.Local.sRouter.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.iC.Declare(Long)
+V.Local.iRet.Declare(Long)
+V.Local.sSeq.Declare(String)
+V.Local.sKey.Declare(String)
+V.Local.iOld.declare(Long)
+V.Local.iNew.Declare(Long)
+
+V.Local.sFile.Set(V.Passed.009000)
+
+F.Intrinsic.String.InstrRev(V.Local.sFile,"\",V.Local.iRet)
+F.Intrinsic.String.Mid(V.Local.sFile,V.Local.iRet,V.Local.sFile)
+F.Intrinsic.String.Concat(V.Caller.TempDir,V.Local.sFile,V.Local.sFile)
+F.Intrinsic.File.Exists(V.Local.sFile,V.local.bExists)
+F.Intrinsic.Control.If(V.Local.bExists)
+	F.Intrinsic.File.File2String(V.Local.sFile,V.Local.sRet)
+	F.Intrinsic.String.Split(V.Local.sRet,V.Ambient.NewLine,V.Local.sRet)
+	F.Intrinsic.Control.For(V.Local.iC,0,V.Local.sRet.UBound,1)
+		F.Intrinsic.String.Left(V.Local.sRet(v.Local.iC),20,V.Local.sRouter)
+		F.Intrinsic.String.Left(V.Local.sRet(v.Local.iC),26,V.Local.sKey)
+		F.global.DocumentControl.GetLinkID(V.Local.sKey,37,V.Local.iOld)
+		F.Intrinsic.Control.If(V.Local.iOld,>,-1)
+			F.Intrinsic.String.Right(V.Local.sRet(v.Local.iC),6,V.Local.sSeq)
+			F.Intrinsic.String.Concat(V.Local.sRouter,V.Local.sSeq,V.Local.sKey)
+			F.Global.DocumentControl.CreateReference(V.Local.sKey,37,V.Local.iNew)
+
+			f.Global.DocumentControl.CopyExt(v.Local.iOld,v.Local.iNew,False,True,v.Caller.User)
+		F.Intrinsic.Control.EndIf
+	F.Intrinsic.Control.Next(V.Local.iC)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.End
+
+Program.Sub.Main.End
+
+Program.Sub.Comments.Start
+${$0$}$ATG_DCC_Router_seq$}$SUPERVSR$}$11/11/2013
+${$1$}$$}$$}$0$}$26000$}$BMJ532GI-Router Resequenced$}$5/4/2016 10:42:24 AM$}$(Program: BMJ532GI; Screen: )
+
+Program.Sub.Comments.End
+
